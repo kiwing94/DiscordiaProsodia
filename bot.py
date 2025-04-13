@@ -256,4 +256,158 @@ async def divine(interaction: discord.Interaction, reflection: str, tone: str):
     log_output("Divine", f"{tone} / {reflection}:
 {answer}")
 
+
+
+@tree.command(name="reconstruct", description="Reconstruct the ancestral root form of a word.")
+@app_commands.describe(word="The modern word to trace", language="Choose PIE, Sumerian, or Akkadian")
+async def reconstruct(interaction: discord.Interaction, word: str, language: str):
+    ancient_langs = ["PIE", "Sumerian", "Akkadian"]
+    if language not in ancient_langs:
+        await interaction.response.send_message(
+            f"❌ Language not supported. Choose from: {', '.join(ancient_langs)}", ephemeral=True
+        )
+        return
+
+    prompt = f"Reconstruct the ancient form of the word '{word}' in {language}. Include the root, meaning, and how it evolved into modern terms."
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": f"You are an expert historical linguist and etymologist specializing in {language}."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.7,
+        max_tokens=300
+    )
+
+    result = response.choices[0].message["content"]
+    await interaction.response.send_message(f"🗿 **Reconstructed Root in {language}:**
+{result}")
+    log_output("Reconstruct", f"{word} ({language}): {result}")
+
+@tree.command(name="languageflow", description="Trace a word's path through ancient languages.")
+@app_commands.describe(concept="The concept to trace (e.g. soul, star, light)")
+async def languageflow(interaction: discord.Interaction, concept: str):
+    prompt = (
+        f"Trace the linguistic evolution of the concept '{concept}' through at least 4 ancient languages: "
+        "Proto-Indo-European (PIE), Sanskrit, Ancient Greek, Latin, and optionally Old English or Sumerian. "
+        "Include the word forms, meanings, and phonetic transitions."
+    )
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a historical linguist specializing in Indo-European and Mesopotamian roots."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.65,
+        max_tokens=400
+    )
+
+    flow = response.choices[0].message["content"]
+    await interaction.response.send_message(f"🌐 **Language Flow for '{concept}':**
+{flow}")
+    log_output("LanguageFlow", f"{concept}:
+{flow}")
+
+
+
+@tree.command(name="sacredword", description="Reveal the sacred or symbolic use of a word in ancient rites or languages.")
+@app_commands.describe(word="The word you want analyzed symbolically")
+async def sacredword(interaction: discord.Interaction, word: str):
+    prompt = (
+        f"Explain the mythic, religious, or symbolic significance of the word '{word}' "
+        f"as used in ancient civilizations — especially Sumerian if applicable. "
+        f"Describe how it was used in ritual, cosmology, or magic."
+    )
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a priest-scholar of ancient languages, especially Sumerian and Akkadian. You explain sacred symbols."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.75,
+        max_tokens=300
+    )
+
+    meaning = response.choices[0].message["content"]
+    await interaction.response.send_message(f"🔺 **Sacred Meaning of '{word}':**
+{meaning}")
+    log_output("SacredWord", f"{word}: {meaning}")
+
+
+
+@tree.command(name="ritual", description="Generate a symbolic ritual ceremony based on a theme and type.")
+@app_commands.describe(theme="The intent or energy of the ritual", type="Type: spoken, silent, poetic")
+async def ritual(interaction: discord.Interaction, theme: str, type: str):
+    if type not in ["spoken", "silent", "poetic"]:
+        await interaction.response.send_message("❌ Type must be one of: spoken, silent, poetic", ephemeral=True)
+        return
+
+    prompt = (
+        f"Design a ritual around the theme '{theme}' in the style '{type}'. "
+        f"Include symbolic elements, gestures, materials, space, and purpose. Keep it sacred and meaningful."
+    )
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a sacred ritualist designing ceremonies with poetic and mystical elements."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.85,
+        max_tokens=450
+    )
+
+    ritual_text = response.choices[0].message["content"]
+    await interaction.response.send_message(f"🕯️ **Ritual for '{theme}' ({type})**
+{ritual_text}")
+    log_output("Ritual", f"{theme} / {type}:
+{ritual_text}")
+
+@tree.command(name="summon", description="Summon an archetypal entity or symbol and let it speak.")
+@app_commands.describe(entity="The being or archetype to summon (e.g., Hope, Trickster, Oracle)")
+async def summon(interaction: discord.Interaction, entity: str):
+    prompt = f"Summon the symbolic entity '{entity}' and let it speak to the user in its true voice."
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are the voice of summoned symbolic entities — poetic, strange, powerful."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.95,
+        max_tokens=250
+    )
+
+    speech = response.choices[0].message["content"]
+    await interaction.response.send_message(f"🔺 **{entity.upper()} Appears:**
+{speech}")
+    log_output("Summon", f"{entity}: {speech}")
+
+@tree.command(name="temple", description="Construct a symbolic sacred space in language.")
+@app_commands.describe(purpose="Purpose of the temple", style="Style: ancient Greek, dreamlike, minimal, cosmic, personal")
+async def temple(interaction: discord.Interaction, purpose: str, style: str):
+    prompt = (
+        f"Describe a sacred temple created for the purpose of '{purpose}' in a '{style}' style. "
+        "Make it poetic, visual, and spiritually resonant."
+    )
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a sacred architect of inner and cosmic temples."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.9,
+        max_tokens=350
+    )
+
+    description = response.choices[0].message["content"]
+    await interaction.response.send_message(f"🏛️ **Temple for {purpose.capitalize()} ({style})**
+{description}")
+    log_output("Temple", f"{purpose} / {style}:
+{description}")
+
 client.run(DISCORD_TOKEN)
