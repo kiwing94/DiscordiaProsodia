@@ -1,0 +1,14 @@
+# Ignorera Python bytecode-filer
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorera .env-filen med API-nycklar
+.env
+
+# Ignorera IDE-inställningar
+.vscode/
+.idea/
+
+# Ignorera systemfiler
+.DS_Store
